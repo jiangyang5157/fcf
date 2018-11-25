@@ -1,5 +1,8 @@
 # iOS
-.DS_Store
+*.DS_Store
 
 # Microsoft Visual Studio Code
-.vscode
+*.vscode
+
+# python
+*.pyc
