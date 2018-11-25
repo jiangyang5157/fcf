@@ -4,9 +4,6 @@ import numpy as np
 import random
 import math
 
-MEMORY_CAPACITY = 100000
-BATCH_SIZE_MAX = 64
-
 DISCOUNT = 0.99
 
 EXPLORATION_MAX = 1
@@ -15,13 +12,17 @@ EXPLORATION_DECAY = 0.001
 
 class Agent:
 
-    def __init__(self, state_size, action_size):
+    def __init__(self, state_size, action_size, memory_capacity, batch_size_max):
         self.state_size = state_size
         self.action_size = action_size
+        self.memory_capacity = memory_capacity
+        self.batch_size_max = batch_size_max
+        
         self.step_count = 0
         self.exploration = EXPLORATION_MAX
+
         self.brain = Brain(state_size, action_size)
-        self.memory = Memory(MEMORY_CAPACITY)
+        self.memory = Memory(self.memory_capacity)
     
     # Decides what action to take in the state
     def act(self, state):
@@ -36,12 +37,12 @@ class Agent:
         # slowly decrease exploration rate based on our eperience
         self.exploration = EXPLORATION_MIN + (EXPLORATION_MAX - EXPLORATION_MIN) * math.exp(-EXPLORATION_DECAY * self.step_count)
         self.step_count += 1
-        print("Exploration rate: ", self.exploration)
+        # print("Exploration rate: ", self.exploration)
 
     # Replays memories and make improvement
     def replay(self):
         # each experence from batch has following format: (state, action, reward, state_)
-        batch = self.memory.sample(BATCH_SIZE_MAX)
+        batch = self.memory.sample(self.batch_size_max)
         batch_size = len(batch)
         if batch_size == 0: # nothing to review
             return
