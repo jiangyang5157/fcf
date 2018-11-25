@@ -4,7 +4,7 @@ import numpy as np
 import random
 import math
 
-DISCOUNT = 0.99
+GAMMA = 0.99
 
 EXPLORATION_MAX = 1
 EXPLORATION_MIN = 0.01
@@ -29,7 +29,7 @@ class Agent:
         if random.random() <= self.exploration:
             return random.randint(0, self.action_size-1)
         else:
-            return np.argmax(self.brain.predict_one_dim(state))
+            return np.argmax(self.brain.predict(state.reshape(1, self.state_size)).flatten())
 
     # Adds sample (state, action, reward, state_) to memory, and adjust the exploration rate
     def observe(self, state, action, reward, state_):
@@ -68,7 +68,7 @@ class Agent:
             if state_ is None:
                 target[action] = reward
             else:
-                target[action] = reward + DISCOUNT * np.amax(p_[i])
+                target[action] = reward + GAMMA * np.amax(p_[i])
 
             data[i] = state
             labels[i] = target

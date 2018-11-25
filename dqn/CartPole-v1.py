@@ -10,6 +10,8 @@ def main():
     action_size = env.env.action_space.n
     memory_capacity = 10000
     batch_size_max = 64
+    print("Observation space shape: {}".format(state_size))
+    print("Action space size: {}".format(action_size))
 
     agent = Agent(state_size, action_size, memory_capacity, batch_size_max)
     

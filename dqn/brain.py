@@ -12,8 +12,6 @@ class Brain:
         self.model = self._create_model()
 
     def _create_model(self):
-        # https://www.tensorflow.org/guide/keras
-        # https://keras.io/models/model/
         model = Sequential()
         model.add(Dense(output_dim=64, input_dim=self.state_size, activation='relu'))
         model.add(Dense(output_dim=self.action_size, activation='linear'))
@@ -31,6 +29,3 @@ class Brain:
 
     def predict(self, state):
         return self.model.predict(state)
-
-    def predict_one_dim(self, state):
-        return self.predict(state.reshape(1, self.state_size)).flatten()
