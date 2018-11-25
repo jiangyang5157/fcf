@@ -1,10 +1,13 @@
 import gym
+import numpy as np
 
 class Environment:
     
     def __init__(self, problem):
         self.problem = problem
         self.env = gym.make(problem)
+        self.observation_space = self.env.observation_space # Discrete
+        self.action_space = self.env.action_space # eg: Box(210, 160, 3), Box(4,)
 
     # Runs one episode
     def run(self, agent):
@@ -30,14 +33,14 @@ class Environment:
 
         print("Total reward: ", reward_sum)
 
-    def to_grayscale(img):
+    def to_grayscale(self, img):
         return np.mean(img, axis=2).astype(np.uint8)
 
-    def downsample(img):
+    def downsample(self, img):
         return img[::2, ::2]
 
-    def preprocess(img):
-        return to_grayscale(downsample(img))
+    def preprocess(self, img):
+        return self.to_grayscale(self.downsample(img))
     
-    def transform_reward(reward):
+    def transform_reward(self, reward):
         return np.sign(reward)

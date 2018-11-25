@@ -6,8 +6,8 @@ def main():
     PROBLEM = 'CartPole-v1'
     env = Environment(PROBLEM)
 
-    state_size  = env.env.observation_space.shape[0]
-    action_size = env.env.action_space.n
+    state_size  = env.observation_space.shape[0]
+    action_size = env.action_space.n
     memory_capacity = 10000
     batch_size_max = 64
     print("Observation space shape: {}".format(state_size))
