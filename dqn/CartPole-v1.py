@@ -2,7 +2,8 @@ from environment import Environment
 from agent import Agent
  
 def main():
-    PROBLEM = 'CartPole-v0'
+    # https://gym.openai.com/envs/CartPole-v1/
+    PROBLEM = 'CartPole-v1'
     env = Environment(PROBLEM)
 
     state_size  = env.env.observation_space.shape[0]
