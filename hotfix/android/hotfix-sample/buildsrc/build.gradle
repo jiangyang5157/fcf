@@ -1,8 +1,8 @@
 apply plugin: 'groovy'
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.12'
-    compile 'org.javassist:javassist:3.20.0-GA'
+    implementation 'org.codehaus.groovy:groovy-all:2.4.12'
+    implementation 'org.javassist:javassist:3.20.0-GA'
 }
 
 sourceSets {
