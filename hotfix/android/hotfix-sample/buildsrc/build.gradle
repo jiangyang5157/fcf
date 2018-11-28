@@ -1,8 +1,8 @@
 apply plugin: 'groovy'
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:2.4.12'
-    implementation 'org.javassist:javassist:3.20.0-GA'
+    compile 'org.codehaus.groovy:groovy-all:2.4.12'
+    compile 'org.javassist:javassist:3.20.0-GA'
 }
 
 sourceSets {
@@ -11,7 +11,7 @@ sourceSets {
             srcDirs = []
         }
         groovy {
-            srcDirs += ['src/main/java']
+            srcDirs += ['src/main/groovy']
         }
     }
 }
@@ -19,7 +19,4 @@ sourceSets {
 repositories {
     google()
     jcenter()
-    maven {
-        url "https://plugins.gradle.org/m2/"
-    }
 }
