@@ -15,9 +15,10 @@ public class ClassInjectionTransform extends Transform {
         this.project = project
     }
 
+    // Task name: transformClassesWith + getName() + For + Debug/Release
     @Override
     String getName() {
-        return "preDexClassInjection" // gen task name
+        return "preDexClassInjection"
     }
 
     @Override
