@@ -34,25 +34,25 @@ public class MyInjection {
 //                        && !filePath.contains("PatchClassRepo.class")
 //                        && !filePath.contains(IDENTIFIER_CLASS_NAME + ".class")
                 ) {
-                    println "#### filePath: " + filePath
-                    if (file.getName() == "MainActivity.class") {
-                        CtClass ctClass = mClassPool.getCtClass(APP_PACKAGE_NAME + ".MainActivity")
-                        if (ctClass.isFrozen()) {
-                            ctClass.defrost()
+                    int index = filePath.indexOf(APP_PACKAGE_NAME)
+                    boolean isMyPackage = index != -1
+                    if (isMyPackage) {
+                        println "#### filePath: " + filePath
+                        if (file.getName() == "MainActivity.class") {
+                            CtClass ctClass = mClassPool.getCtClass(APP_PACKAGE_NAME + ".MainActivity")
+                            if (ctClass.isFrozen()) {
+                                ctClass.defrost()
+                            }
+                            CtMethod ctMethod = ctClass.getDeclaredMethod("onCreate")
+                            println("ctMethod = " + ctMethod)
+                            ctMethod.insertBefore("if(false!=true){ String a =\"asd\";}")
+                            ctClass.writeFile(path)
+                            ctClass.detach()
                         }
-                        CtMethod ctMethod = ctClass.getDeclaredMethod("onCreate")
-                        println("ctMethod = " + ctMethod)
-                        ctMethod.insertBefore("if(false!=true){ String a =\"asd\";}")
-                        ctClass.writeFile(path)
-                        ctClass.detach()
                     }
                 }
             }
         }
-
-//                    int index = filePath.indexOf(APP_PACKAGE_NAME)
-//                    boolean isMyPackage = index != -1
-//                    if (isMyPackage) {
 //                        int end = filePath.length() - 6 // .class = 6
 //                        String className = filePath.substring(index, end)
 //                                .replace('\\', '.')
@@ -85,9 +85,6 @@ public class MyInjection {
 //                        }
 //                        cls.writeFile(path)
 //                        cls.detach()
-//                    }
-//                }
-//            }
     }
 
     public static String getReturnType(String methodSign) {
