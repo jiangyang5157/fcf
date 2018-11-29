@@ -14,7 +14,7 @@ public class MyInjection {
     private static final String IDENTIFIER_FIELD = "\$Savior"
     private static final String APP_PACKAGE_NAME = "com.fiserv.hotfix.sample"
     private static final String PATCH_PACKAGE_NAME = "com.fiserv.hotfix.patch"
-    private static final String SAVIOR_CLASS_NAME = PATCH_PACKAGE_NAME + ".Savior"
+    private static final String SAVIOR_CLASS_NAME = "com.fiserv.hotfix.patch.Savior"
 
     private final static ClassPool mClassPool = ClassPool.getDefault()
 
@@ -23,41 +23,33 @@ public class MyInjection {
         mClassPool.appendClassPath(path)
         mClassPool.appendClassPath(project.android.bootClasspath[0].toString())
 
-//        int rootIndex = path.indexOf("/app/build/intermediates/")
-//        String saviorPath = path.substring(0, rootIndex) + "/savior/build/intermediates/classes/release"
-//        mClassPool.appendClassPath(saviorPath)
-//        mClassPool.insertClassPath("/Users/wangxiandeng/Library/Android/sdk/platforms/android-24/android.jar")
-
         File dir = new File(path)
         if (dir.isDirectory()) {
             dir.eachFileRecurse { File file ->
-                println "#### file: " + file
-//                if (file.getName() == "MainActivity.class") {
-//                    CtClass ctClass = pool.getCtClass(APP_PACKAGE_NAME + ".MainActivity")
-//                    println("ctClass = " + ctClass)
-//                    if (ctClass.isFrozen()) {
-//                        ctClass.defrost()
-//                    }
-//                    CtMethod ctMethod = ctClass.getDeclaredMethod("onCreate")
-//                    ctMethod.insertBefore("// asd")
-//                    ctClass.writeFile(path)
-//                    ctClass.detach()
-//                }
+                String filePath = file.absolutePath
+                if (filePath.endsWith(".class")
+                        && !filePath.contains('R$')
+                        && !filePath.contains('R.class')
+                        && !filePath.contains("BuildConfig.class")
+//                        && !filePath.contains("PatchClassRepo.class")
+//                        && !filePath.contains(IDENTIFIER_CLASS_NAME + ".class")
+                ) {
+                    println "#### filePath: " + filePath
+                    if (file.getName() == "MainActivity.class") {
+                        CtClass ctClass = mClassPool.getCtClass(APP_PACKAGE_NAME + ".MainActivity")
+                        if (ctClass.isFrozen()) {
+                            ctClass.defrost()
+                        }
+                        CtMethod ctMethod = ctClass.getDeclaredMethod("onCreate")
+                        println("ctMethod = " + ctMethod)
+                        ctMethod.insertBefore("if(false!=true){ String a =\"asd\";}")
+                        ctClass.writeFile(path)
+                        ctClass.detach()
+                    }
+                }
             }
         }
 
-
-
-
-
-
-//                String filePath = file.absolutePath
-//                if (filePath.endsWith(".class")
-//                        && !filePath.contains('R$')
-//                        && !filePath.contains('R.class')
-//                        && !filePath.contains("BuildConfig.class")
-//                        && !filePath.contains("PatchClassRepo.class")
-//                        && !filePath.contains(IDENTIFIER_CLASS_NAME + ".class")) {
 //                    int index = filePath.indexOf(APP_PACKAGE_NAME)
 //                    boolean isMyPackage = index != -1
 //                    if (isMyPackage) {
@@ -96,7 +88,6 @@ public class MyInjection {
 //                    }
 //                }
 //            }
-//        }
     }
 
     public static String getReturnType(String methodSign) {

@@ -50,6 +50,7 @@ public class ClassInjectionTransform extends Transform {
                         directoryInput.scopes,
                         Format.DIRECTORY)
                 FileUtils.copyDirectory(directoryInput.file, dest)
+                println "Transform DIR <" + directoryInput.file + "> --> <" + dest + ">"
             }
 
             // copy to dst
