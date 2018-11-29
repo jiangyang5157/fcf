@@ -1,6 +1,7 @@
 package com.fiserv.hotfix.patch;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.lang.reflect.Field;
@@ -11,13 +12,12 @@ public class PatchLoader {
 
     private static final String TAG = PatchLoader.class.getSimpleName();
 
+    private static final String IDENTIFIER_CLASS_NAME = "$Patch";
+    private static final String IDENTIFIER_FIELD = "$Savior";
+
     private Application mApplication;
 
     private String mPatchClassRepoName;
-
-    private String mClassNameIdentifier;
-
-    private String mFieldIdentifier;
 
     private static PatchLoader mInstance;
 
@@ -31,18 +31,14 @@ public class PatchLoader {
     private PatchLoader() {
     }
 
-    public void initialize(Application application,
-                           String patchClassRepoName,
-                           String classNameIdentifier,
-                           String fieldIdentifier) {
+    public void initialize(@NonNull Application application,
+                           @NonNull String patchClassRepoName) {
         mApplication = application;
         mPatchClassRepoName = patchClassRepoName;
-        mClassNameIdentifier = classNameIdentifier;
-        mFieldIdentifier = fieldIdentifier;
     }
 
     private boolean isInitialized() {
-        return !(mApplication == null || mPatchClassRepoName == null || mClassNameIdentifier == null || mFieldIdentifier == null);
+        return !(mApplication == null || mPatchClassRepoName == null);
     }
 
     public void load(String patchPath) throws RuntimeException {
@@ -58,9 +54,9 @@ public class PatchLoader {
             PatchClassRepo patchClassRepo = (PatchClassRepo) patchClassRepoObject.newInstance();
 
             for (String className : patchClassRepo.getNames()) {
-                int indexOfPatchIdentifier = className.indexOf(mClassNameIdentifier);
+                int indexOfPatchIdentifier = className.indexOf(IDENTIFIER_CLASS_NAME);
                 if (indexOfPatchIdentifier == -1) {
-                    Log.e(TAG, "Couldn't find patch class name identifier <" + mClassNameIdentifier + "> from class name: " + className);
+                    Log.e(TAG, "Couldn't find patch class name identifier <" + IDENTIFIER_CLASS_NAME + "> from class name: " + className);
                     continue;
                 }
 
@@ -68,7 +64,7 @@ public class PatchLoader {
                 Object classInstance = classObject.newInstance();
                 String originalClassName = className.substring(0, indexOfPatchIdentifier);
                 Class<?> originalClassObject = classLoader.loadClass(originalClassName);
-                Field fieldOfSaviorIdentifier = originalClassObject.getDeclaredField(mFieldIdentifier);
+                Field fieldOfSaviorIdentifier = originalClassObject.getDeclaredField(IDENTIFIER_FIELD);
                 fieldOfSaviorIdentifier.setAccessible(true);
                 fieldOfSaviorIdentifier.set(null, classInstance);
             }
