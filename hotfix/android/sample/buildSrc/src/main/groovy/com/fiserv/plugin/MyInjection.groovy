@@ -12,6 +12,7 @@ public class MyInjection {
 
     private static final String IDENTIFIER_CLASS_NAME = "\$Patch"
     private static final String IDENTIFIER_FIELD = "\$Savior"
+    private static final String APP_PACKAGE_PATH = "com/fiserv/hotfix/sample"
     private static final String APP_PACKAGE_NAME = "com.fiserv.hotfix.sample"
     private static final String PATCH_PACKAGE_NAME = "com.fiserv.hotfix.patch"
     private static final String SAVIOR_CLASS_NAME = "com.fiserv.hotfix.patch.Savior"
@@ -31,10 +32,8 @@ public class MyInjection {
                         && !filePath.contains('R$')
                         && !filePath.contains('R.class')
                         && !filePath.contains("BuildConfig.class")
-//                        && !filePath.contains("PatchClassRepo.class")
-//                        && !filePath.contains(IDENTIFIER_CLASS_NAME + ".class")
                 ) {
-                    int index = filePath.indexOf(APP_PACKAGE_NAME)
+                    int index = filePath.indexOf(APP_PACKAGE_PATH)
                     boolean isMyPackage = index != -1
                     if (isMyPackage) {
                         println "#### filePath: " + filePath
